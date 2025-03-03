@@ -102,7 +102,7 @@ const DasboardMasyarakat = () => {
         </div>
     </div>
 
-    <div className='flex flex-col relative'>
+ 
 
 
     
@@ -198,8 +198,7 @@ const DasboardMasyarakat = () => {
         )}
         
       </section>
-         
-      </div>
+   
     </>
   );
 };

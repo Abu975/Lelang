@@ -7,6 +7,7 @@ const initialLelang = {
   barang: [],
   dataLelang: [],
   penawaran: [],
+  handleFetch: null,
   handleGetUser: () => {},
   handleGetBarang: () => {},
   handleAddBarang: () => {},
@@ -39,7 +40,7 @@ const LelangProvider = ({ children }) => {
   const [dataLelang, setDataLelang] = useState([]);
   const [isAddingLelang, setIsAddingLelang] = useState(false);
   const [users, setUsers] = useState([]);
-  const [handleFetch, setHandleFetch] = useState(false);
+  const [handleFetch, setHandleFetch] = useState(null);
 
   const handleGetHighestBid = async (id_penawaran) => {
     try {
@@ -136,7 +137,7 @@ const LelangProvider = ({ children }) => {
     try {
       const response = await getBarang(token);
       const { data } = response.data;
-      setBarang(data.barang);
+      await setBarang(data.barang);
     } catch (error) {
       console.error("Failed to fetch barang:", error);
       setBarang([]);
@@ -160,6 +161,7 @@ const LelangProvider = ({ children }) => {
       const response = await editBarang(id_barang, barang, token);
       if (response.status === 200) {
         handleGetBarang();
+        handleGetLelang();
         setHandleFetch(true);
       }
     } catch (error) {
@@ -170,8 +172,9 @@ const LelangProvider = ({ children }) => {
   const handleDeleteBarang = async (id_barang) => {
     try {
       const response = await deleteBarang(id_barang, token);
-      if (response.status === 201) {
+      if (response.status === 200) {
         handleGetBarang();
+        handleGetLelang();
       }
     } catch (error) {
       console.error("Failed to delete barang:", error);
@@ -192,7 +195,7 @@ const LelangProvider = ({ children }) => {
         return { ...lelang, ...barang, highestBid };
       });
 
-      setDataLelang(combinedData);
+      await setDataLelang(combinedData);
     } catch (error) {
       console.error("Failed to fetch lelang data:", error);
       setDataLelang([]);
@@ -223,8 +226,8 @@ const LelangProvider = ({ children }) => {
       const response = await deleteLelang(id_lelang, token);
       if (response.status === 200) {
         await handleGetLelang();
-        Swal.fire("Berhasil", "Lelang berhasil dihapus", "success");
         setHandleFetch(true);
+        Swal.fire("Berhasil", "Lelang berhasil dihapus", "success");
       } else {
         Swal.fire("Gagal", "Gagal menghapus lelang", "error");
       }
@@ -237,8 +240,7 @@ const LelangProvider = ({ children }) => {
   const handleUpdateLelangStatus = async (data) => {
     try {
       const response = await updateLelangStatus(data, token);
-      if (response.status === 200 || response.status === 201) {
-        await handleGetLelang();
+      if (response.status == 200) {
         setHandleFetch(true);
         Swal.fire("Berhasil", "Status lelang berhasil diperbarui", "success");
       } else {
@@ -280,7 +282,7 @@ const LelangProvider = ({ children }) => {
   const handleDeleteHistory = async (id_history) => {
     try {
       const response = await deleteHistory(id_history, token);
-      if (response.status === 201) {
+      if (response.status === 200) {
         await handleGetLelang();
         Swal.fire("Berhasil", "History berhasil dihapus", "success");
         setHandleFetch(true);
@@ -294,24 +296,21 @@ const LelangProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (handleFetch) {
+    if(handleFetch)
+    {
+
       handleGetBarang();
       handleGetLelang();
       handleGetUser();
       handleGetPenawaran();
       setTimeout(() => {
         setHandleFetch(false);
-      }, 300);
+      },100);
     }
-  }, [handleFetch, barang]);
-
-  useEffect(() => {
-    handleGetLelang();
-    handleGetPenawaran();
-  }, []);
+  }, [handleFetch,barang]);
 
   return (
-    <LelangContext.Provider value={{ barang, dataLelang, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory, handleDeleteHistory }}>
+    <LelangContext.Provider value={{ barang, dataLelang,handleFetch, users, penawaran, handleGetHighestBid, handleEditPenawaran, handleDeletePenawaran, handleAddPenawaran, handleGetPenawaran, handleGetBarang, handleAddBarang, handleEditBarang, handleDeleteBarang, handleGetLelang, handleAddLelang, handleDeleteLelang, handleUpdateLelangStatus, handlePostHistory, handleDeleteHistory }}>
       {children}
     </LelangContext.Provider>
   );
