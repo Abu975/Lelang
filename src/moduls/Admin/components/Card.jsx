@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-no-undef */
 import { useState } from "react";
-import { Trash2, Pencil, History, Banknote, Gavel } from "lucide-react"; // Tambahkan ikon History
+import { Trash2, Pencil, History, Banknote, Gavel, XCircle } from "lucide-react"; // Tambahkan ikon History
 import DropdownStatusLelang from "./DropdownStatusLelang.jsx";
 import { https } from "../../../config/url.js";
 
@@ -128,8 +129,7 @@ const Card = ({
                   onClick={onBatal}
                   className="flex-1 px-1 py-1 pl-0 text-xs text-[#FF6363] hover:text-white font-medium border-2 border-[#FD9292]   bg-[#FFE3E3] rounded-lg hover:bg-[#FF6363] hover:border-[#FF6363] focus:ring-none focus:outline-none focus:ring-none transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                  <XCircle className="w-4 h-4 inline" /> <br></br> Batal Lelang
-                </button>
+                  <XCircle className="w-4 h-4 inline"/> <br/> Batal Lelang </button>
               ) : (
                 <button
                   onClick={onLelang}
