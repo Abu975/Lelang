@@ -31,6 +31,13 @@ const DasboardMasyarakat = () => {
     handleGetPenawaran();
   }, []);
 
+  const handleClick = () => {
+    const phoneNumber = '+62895422847674'; // Ganti dengan nomor WhatsApp yang dituju
+    const message = 'Halo Kak, Saya mau lelang.'; // Ganti dengan pesan default yang diinginkan
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const handleHistory = (idLelang) => {
     const historyData = penawaran.filter(p => p.id_lelang === idLelang);
     setSelectedHistory(historyData);
@@ -165,7 +172,12 @@ const DasboardMasyarakat = () => {
               <p>Mau lelang? hubungi kami sekarang</p>
             </div>
           </div>
-          <button className="bg-[#EBF2FC] text-[#4365D1] font-semibold p-2 rounded-lg shadow-md">Hubungi</button>
+          <button
+                className="bg-[#EBF2FC] text-[#4365D1] p-2 rounded-lg shadow-md"
+                onClick={handleClick}
+              >
+                Hubungi
+              </button>
         </div>
 
         

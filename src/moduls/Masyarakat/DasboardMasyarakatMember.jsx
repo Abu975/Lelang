@@ -11,7 +11,6 @@ import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import Dat
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { Calendar, Banknote } from 'lucide-react'; // Import icons from lucide-react
 
-
 const MainLayoutsMasyarakatMember = () => {
   const { name, isLoggedin } = useAuth();
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
@@ -86,6 +85,13 @@ const MainLayoutsMasyarakatMember = () => {
   };
 
   const submitBid = async () => {
+    const highestBid = getHighestBid(selectedLelangId);
+
+    if (parseFloat(bidPrice) <= highestBid.nominal) {
+      Swal.fire('Penawaran Gagal', `Penawaran harus lebih tinggi dari penawaran tertinggi saat ini (Rp${highestBid.nominal.toLocaleString()})`, 'error');
+      return;
+    }
+
     if (parseFloat(bidPrice) < selectedHargaAwal) {
       Swal.fire('Penawaran Gagal', 'Penawaran harus lebih tinggi dari harga awal', 'error');
       return;
@@ -99,7 +105,7 @@ const MainLayoutsMasyarakatMember = () => {
       }
       setShowBidPopup(false);
       setBidPrice("");
-      Swal.fire('Penawaran Berhasil', 'Penawaran Anda telah berhasil dikirim', 'success').then(() => {
+      Swal.fire('Penawaran Berhasil', `Penawaran Anda sebesar Rp${parseFloat(bidPrice).toLocaleString()} telah berhasil dikirim`, 'success').then(() => {
         window.location.reload(); // Refresh the browser
       });
     } catch (error) {
@@ -228,7 +234,6 @@ const MainLayoutsMasyarakatMember = () => {
               </button>
             </div>
 
-
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
               {filteredLelang.map((lelang) => {
                 const userBid = getUserBid(lelang.id_lelang);
@@ -272,6 +277,8 @@ const MainLayoutsMasyarakatMember = () => {
             lelangStatus={selectedLelangStatus}
             isEdit={isEdit}
             hargaAwal={selectedHargaAwal}
+            getHighestBid={getHighestBid}
+            selectedLelangId={selectedLelangId}
           />
         )}
       </section>

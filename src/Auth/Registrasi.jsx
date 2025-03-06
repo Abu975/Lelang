@@ -2,16 +2,27 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { handleRegister } from "../config/api";
 import Swal from "sweetalert2";
+import EyeIcon from "./components/EyeIconPw";
 
 const Registrasi = () => {
   const [namaLengkap, setNamaLengkap] = useState("");
   const [username, setUsername] = useState("");
   const [telp, setTelp] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (telp.length > 15) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Nomor Telepon tidak valid',
+        text: 'Nomor Telepon tidak boleh lebih dari 15 karakter',
+      });
+      return;
+    }
   
     const userData = {
       nama_lengkap: namaLengkap,
@@ -39,7 +50,7 @@ const Registrasi = () => {
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          navigate('/login'); // Arahkan ke halaman login setelah berhasil mendaftar
+          navigate('/login'); // Navigate to login page after successful registration
         });
       }
     } catch (error) {
@@ -50,6 +61,10 @@ const Registrasi = () => {
         text: error.message,
       });
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
@@ -92,16 +107,17 @@ const Registrasi = () => {
                 required
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-6 relative">
               <label className="block text-gray-700">Password</label>
               <input 
-                type="password" 
+                type={isPasswordVisible ? "text" : "password"} 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg" 
                 placeholder="Masukkan Password"
                 required
               />
+              <EyeIcon isVisible={isPasswordVisible} onClick={togglePasswordVisibility} />
             </div>
             <button type="submit" className="w-full bg-blue-main text-white py-2.5 rounded-lg font-medium">
               Sign Up

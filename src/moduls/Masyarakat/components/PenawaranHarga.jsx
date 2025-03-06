@@ -1,11 +1,18 @@
 import Swal from 'sweetalert2';
 
-const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus, isEdit, hargaAwal }) => {
+const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus, isEdit, hargaAwal, getHighestBid, selectedLelangId }) => {
   const handleBidChange = (e) => {
     setBidPrice(e.target.value);
   };
 
   const handleSubmit = async () => {
+    const highestBid = getHighestBid(selectedLelangId);
+
+    if (parseFloat(bidPrice) <= highestBid.nominal) {
+      Swal.fire('Penawaran Gagal', `Penawaran harus lebih tinggi dari penawaran tertinggi saat ini Rp${highestBid.nominal.toLocaleString()}`, 'error');
+      return;
+    }
+
     if (parseFloat(bidPrice) < hargaAwal) {
       Swal.fire('Penawaran Gagal', 'Penawaran harus lebih tinggi dari harga awal', 'error');
       return;
@@ -14,11 +21,11 @@ const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelan
     try {
       await submitBid();
       setBidPrice("");
-      Swal.fire('Penawaran Berhasil', 'Penawaran Anda telah berhasil dikirim', 'success').then(() => {
+      Swal.fire('Penawaran Berhasil', `Penawaran Anda sebesar Rp${parseFloat(bidPrice).toLocaleString()} telah berhasil dikirim`, 'success').then(() => {
         window.location.reload(); // Refresh the browser
       });
     } catch (error) {
-      Swal.fire('Penawaran Gagal', 'Terjadi kesalahan saat mengirim penawaran', {error});
+      Swal.fire('Penawaran Gagal', 'Terjadi kesalahan saat mengirim penawaran', error);
     }
   };
 
