@@ -21,11 +21,11 @@ const ConditionalLayout = () => {
       {/* Jika belum login */}
       {!isLoggedin ? (
         <>
-          <Route path="/" element={<LelangProvider><DasboardMasyarakat /></LelangProvider>} />
+          <Route path="/user" element={<LelangProvider><DasboardMasyarakat /></LelangProvider>} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<LoginAdmin />} />
           <Route path="/registrasi" element={<Registrasi />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/user" />} />
         </>
       ) : (
         <>

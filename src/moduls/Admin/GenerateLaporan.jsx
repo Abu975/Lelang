@@ -148,7 +148,7 @@ function GenerateLaporan() {
           >
             <option className="bg-white text-gray-600" value="semuanya">Semuanya</option>
             <option  className="bg-white text-gray-600" value="nama_lengkap">Username</option>
-            <option className="bg-white text-gray-600" value="tanggal">Tanggal</option>
+          
             <option className="bg-white text-gray-600" value="nama_barang">Nama Barang</option>
             <option className="bg-white text-gray-600" value="harga_awal">Harga Awal</option>
             <option className="bg-white text-gray-600" value="nominal">Nominal</option>
@@ -198,7 +198,9 @@ function GenerateLaporan() {
       )}
 
 <div className="scrollable-content pt-2">
+  
   <div className="">
+    
   <TableGenerate
         handleCetakClick={handleCetakClick}
         reportData={filteredReportData}

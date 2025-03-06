@@ -193,8 +193,8 @@ function PendataanBarang() {
               value={lelangFilter}
             >
               <option className="bg-white text-gray-600" value="semua">Semua Barang</option>
-              <option className="bg-white text-gray-600" value="sudah">Sudah Dilelang</option>
-              <option className="bg-white text-gray-600" value="belum">Belum Dilelang</option>
+              <option className="bg-white text-gray-600" value="sudah">Belum Dilelang</option>
+              <option className="bg-white text-gray-600" value="belum">Sudah Dilelang</option>
             </select>
           </div>
              

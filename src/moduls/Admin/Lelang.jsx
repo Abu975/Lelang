@@ -11,6 +11,9 @@ import Swal from 'sweetalert2';
 import { useAuth } from '../../Auth/AuthContext';
 import { Banknote, Calendar } from 'lucide-react';
 
+// Import CSS for loading animation
+
+
 const Lelang = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const { name } = useAuth();
@@ -26,11 +29,11 @@ const Lelang = () => {
   const [showDateRangePopup, setShowDateRangePopup] = useState(false); // State for showing date range popup
   const [showPriceRangePopup, setShowPriceRangePopup] = useState(false); // State for showing price range popup
 
+
   useEffect(() => {
     handleGetLelang();
     handleGetPenawaran();
   }, []);
-
 
   const handleUpdateStatus = async (id_lelang, id_barang, status) => {
     await handleUpdateLelangStatus({ id_lelang, id_barang, status });
@@ -102,7 +105,7 @@ const Lelang = () => {
     closeHistoryPopup();
   };
 
-  // Filter lelang data based on search query, date range, and price range
+  // Filter lelang data based on search query, date range, price range, and status filter
   const filteredLelang = dataLelang.filter(lelang => {
     const matchesSearchQuery = lelang.nama_barang.toLowerCase().includes(searchQuery.toLowerCase()) ||
       lelang.deskripsi_barang.toLowerCase().includes(searchQuery.toLowerCase());
@@ -115,7 +118,9 @@ const Lelang = () => {
     const matchesPriceRange = (!priceRange.min || effectivePrice >= Number(priceRange.min)) &&
       (!priceRange.max || effectivePrice <= Number(priceRange.max));
 
-    return matchesSearchQuery && matchesDateRange && matchesPriceRange;
+    const matchesStatusFilter = statusFilter === "semua" || lelang.status === statusFilter;
+
+    return matchesSearchQuery && matchesDateRange && matchesPriceRange && matchesStatusFilter;
   });
 
   // Sort lelang data based on sort option
@@ -216,22 +221,24 @@ const Lelang = () => {
       )}
 
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-2 h-[100vh] pb-[350px] scrollable-content pt-2">
-        {Array.isArray(sortedLelang) && sortedLelang.map((lelang) => (
-          <Card
-            key={lelang.id_lelang}
-            onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, status)}
-            onBatal={() => handleBatal(lelang.id_lelang)}
-            onHistory={() => handleHistory(lelang.id_lelang)}
-            showMainButtons={false}
-            title={lelang.nama_barang}
-            description={lelang.deskripsi_barang}
-            date={lelang.tanggal}
-            price={lelang.harga_awal}
-            imageUrl={lelang.foto}
-            status={lelang.status}
-            highestBid={getHighestBid(lelang.id_lelang)}
-          />
-        ))}
+
+          {Array.isArray(sortedLelang) && sortedLelang.map((lelang) => (
+            <Card
+              key={lelang.id_lelang}
+              onUpdateStatus={(status) => handleUpdateStatus(lelang.id_lelang, lelang.id_barang, status)}
+              onBatal={() => handleBatal(lelang.id_lelang)}
+              onHistory={() => handleHistory(lelang.id_lelang)}
+              showMainButtons={false}
+              title={lelang.nama_barang}
+              description={lelang.deskripsi_barang}
+              date={lelang.tanggal}
+              price={lelang.harga_awal}
+              imageUrl={lelang.foto}
+              status={lelang.status}
+              highestBid={getHighestBid(lelang.id_lelang)}
+            />
+          ))}
+       
       </div>
       </section>
 

@@ -46,12 +46,16 @@ const Logout = () => {
             </button>
           </div>
 
+        <div className="flex flex-col">
+
+
           {isUserMenuOpen && (
             <div className="relative mt-5">
               <div
                 className="absolute right-0 z-60 my-6 text-base list-none bg-[#DADCF5] divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-white dark:divide-white w-25 items-center text-center"
                 id="dropdown-user"
               >
+          
 
                 <ul className="py-1">
                   <li>
@@ -66,6 +70,11 @@ const Logout = () => {
               </div>
             </div>
           )}
+          
+            
+          
+        </div>
+
         </div>
       </div>
     </>

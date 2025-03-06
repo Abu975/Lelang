@@ -9,16 +9,32 @@ const StrukModalGenerate = ({ isModalOpen, handleCloseModal, generatePDF, select
           &times;
         </button>
         <div ref={printRef} className="max-w-md mx-auto p-6 border border-gray-200 rounded-md">
+          <div className="flex justify-center">
+          <img className="w-10 h-10" src="/LogoStruk.png" alt="" />
           <h2 className="text-center text-2xl font-bold mb-4">Struk Pembayaran</h2>
-          <div className="mb-4">
-            <p><strong>Username:</strong> {selectedRow.nama_lengkap}</p>
-            <p><strong>Tanggal:</strong> {new Date(selectedRow.tanggal).toLocaleDateString()}</p>
-            <p><strong>Status:</strong> {selectedRow.status}</p>
-            <p><strong>Nama Barang:</strong> {selectedRow.nama_barang}</p>
-            <p><strong>Harga Awal:</strong> {selectedRow.harga_awal}</p>
-            <p><strong>Nominal:</strong> {selectedRow.nominal || "N/A"}</p>
-            <p><strong>Telepon:</strong> {selectedRow.telp || "N/A"}</p>
           </div>
+          
+          <div className="border-t border-dotted border-black w-full my-4"></div>
+
+          <div className="mb-4">
+            <p><strong>Nama:</strong> {selectedRow.nama_lengkap}</p>
+            <p><strong>Nomor Telepon:</strong> {selectedRow.telp}</p>
+            <p><strong>Tanggal:</strong> {new Date(selectedRow.tanggal).toLocaleDateString()}</p>
+
+            <div className="border-t border-dotted border-black w-full my-4"></div>
+          <div></div>
+            <p><strong>Nama Barang:</strong> {selectedRow.nama_barang}</p>
+            <p><strong>Harga Awal:</strong> Rp{selectedRow.harga_awal.toLocaleString()}</p>
+            <p><strong>Penawaran:</strong> Rp{selectedRow.nominal.toLocaleString()}</p>
+
+            
+          </div>
+          <div className="border-t border-dotted border-black w-full my-4"></div>
+          <div>
+            <p className="font-bold">Total yang harus dibayar :</p>
+            <p><strong></strong> Rp{selectedRow.nominal.toLocaleString()}</p>
+          </div>
+          <div className="border-t border-dotted border-black w-full my-4"></div>
           <div className="mb-4">
             <p className="text-center">Terima kasih telah berpartisipasi dalam pelelangan ini.</p>
           </div>

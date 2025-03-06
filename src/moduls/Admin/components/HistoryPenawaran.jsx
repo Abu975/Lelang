@@ -45,7 +45,7 @@ const HistoryPenawaran = ({ historyData = [], closePopup, addHighestBidToReport,
             historyData.map((penawaran, index) => (
               <div key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded-md shadow-sm">
                 <div>
-                  <p className="text-lg font-semibold">{penawaran.username}</p>
+                  <p className="text-lg font-semibold">{penawaran.nama_lengkap}</p>
                   <p className="text-sm text-gray-600">Rp{penawaran.nominal.toLocaleString()}</p>
                 </div>
                 {!isAdmin && penawaran.username === currentUser && (

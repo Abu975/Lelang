@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Card from "../Admin/components/Card";
 import SearchBar from "../Admin/components/Search";
 import HeaderMasyarakat from "./components/HeaderMasyarakat";
@@ -10,6 +11,7 @@ import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import Dat
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { Calendar, Banknote } from 'lucide-react'; // Import icons from lucide-react
 
+
 const MainLayoutsMasyarakatMember = () => {
   const { name, isLoggedin } = useAuth();
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
@@ -19,6 +21,7 @@ const MainLayoutsMasyarakatMember = () => {
   const { dataLelang, handleGetLelang, handleAddPenawaran, handleGetPenawaran, handleEditPenawaran, penawaran, handleDeletePenawaran } = useLelang();
   const [selectedLelangStatus, setSelectedLelangStatus] = useState("");
   const [selectedLelangId, setSelectedLelangId] = useState(null);
+  const [selectedHargaAwal, setSelectedHargaAwal] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [editPenawaranId, setEditPenawaranId] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
@@ -36,6 +39,13 @@ const MainLayoutsMasyarakatMember = () => {
     handleGetPenawaran();
   }, []);
 
+  const handleClick = () => {
+    const phoneNumber = '+62895422847674'; // Ganti dengan nomor WhatsApp yang dituju
+    const message = 'Halo Kak, Saya mau lelang.'; // Ganti dengan pesan default yang diinginkan
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const handleHistory = (idLelang) => {
     const historyData = penawaran.filter(p => p.id_lelang === idLelang);
     setSelectedHistory(historyData);
@@ -51,16 +61,18 @@ const MainLayoutsMasyarakatMember = () => {
     handleGetPenawaran(); // Refresh penawaran after deletion
   };
 
-  const handleBid = (id, status) => {
+  const handleBid = (id, status, hargaAwal) => {
     setSelectedLelangId(id);
     setSelectedLelangStatus(status);
+    setSelectedHargaAwal(hargaAwal);
     setIsEdit(false);
     setShowBidPopup(true);
   };
 
-  const handleEditBid = (id, status, penawaranId, nominal) => {
+  const handleEditBid = (id, status, penawaranId, nominal, hargaAwal) => {
     setSelectedLelangId(id);
     setSelectedLelangStatus(status);
+    setSelectedHargaAwal(hargaAwal);
     setIsEdit(true);
     setEditPenawaranId(penawaranId);
     setBidPrice(nominal);
@@ -74,16 +86,25 @@ const MainLayoutsMasyarakatMember = () => {
   };
 
   const submitBid = async () => {
+    if (parseFloat(bidPrice) < selectedHargaAwal) {
+      Swal.fire('Penawaran Gagal', 'Penawaran harus lebih tinggi dari harga awal', 'error');
+      return;
+    }
+
     try {
       if (isEdit) {
         await handleEditPenawaran(selectedLelangId, editPenawaranId, bidPrice, name);
       } else {
         await handleAddPenawaran(selectedLelangId, bidPrice);
       }
-      console.log("Bid submitted:", bidPrice);
       setShowBidPopup(false);
+      setBidPrice("");
+      Swal.fire('Penawaran Berhasil', 'Penawaran Anda telah berhasil dikirim', 'success').then(() => {
+        window.location.reload(); // Refresh the browser
+      });
     } catch (error) {
       console.error("Failed to submit bid:", error);
+      Swal.fire('Penawaran Gagal', 'Terjadi kesalahan saat mengirim penawaran', 'error');
     }
   };
 
@@ -134,7 +155,7 @@ const MainLayoutsMasyarakatMember = () => {
         </div>
       </div>
 
-      <section className="pt-16 max-w-[900px] mx-auto">
+      <section className="pt-16 max-w-[900px] mx-auto ">
         <div className="grid grid-cols-12 mt-2 gap-1 bg-white p-5">
           <select
             className="col-span-12 sm:col-span-4 border-0 text-dark-100 w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC] rounded-lg"
@@ -191,7 +212,7 @@ const MainLayoutsMasyarakatMember = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
-          <div className='scrollable-content h-[100vh] pb-[250px] mt-2'>
+          <div className='scrollable-content h-[100vh] pb-[500px] mt-2'>
             <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
               <div className="flex items-center">
                 <div>
@@ -199,8 +220,14 @@ const MainLayoutsMasyarakatMember = () => {
                   <p>Mau lelang? hubungi kami sekarang</p>
                 </div>
               </div>
-              <button className="bg-[#EBF2FC] text-[#4365D1] p-2 rounded-lg shadow-md">Hubungi</button>
+              <button
+                className="bg-[#EBF2FC] text-[#4365D1] p-2 rounded-lg shadow-md"
+                onClick={handleClick}
+              >
+                Hubungi
+              </button>
             </div>
+
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
               {filteredLelang.map((lelang) => {
@@ -210,8 +237,8 @@ const MainLayoutsMasyarakatMember = () => {
                     key={lelang.id_lelang}
                     isMasyarakatPage={true}
                     onHistory={() => handleHistory(lelang.id_lelang)}
-                    onTawar={() => handleBid(lelang.id_lelang, lelang.status)}
-                    onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid?.id_penawaran, userBid?.nominal)}
+                    onTawar={() => handleBid(lelang.id_lelang, lelang.status, lelang.harga_awal)}
+                    onEditBid={() => handleEditBid(lelang.id_lelang, lelang.status, userBid?.id_penawaran, userBid?.nominal, lelang.harga_awal)}
                     isLoggedin={isLoggedin}
                     title={lelang.nama_barang}
                     description={lelang.deskripsi_barang}
@@ -244,6 +271,7 @@ const MainLayoutsMasyarakatMember = () => {
             submitBid={submitBid}
             lelangStatus={selectedLelangStatus}
             isEdit={isEdit}
+            hargaAwal={selectedHargaAwal}
           />
         )}
       </section>

@@ -10,6 +10,7 @@ import DateRangeFilter from '../Admin/components/DateRangeFilter'; // Import Dat
 import PriceRangeFilter from '../Admin/components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { Banknote, Calendar } from 'lucide-react';
 
+
 const DasboardMasyarakat = () => {
   const [showHistoryPopup, setShowHistoryPopup] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
@@ -56,9 +57,6 @@ const DasboardMasyarakat = () => {
           navigate("/login");
         }
       });
-    } else {
-      // Proses tawar barang jika pengguna sudah login
-      console.log("Menawar barang");
     }
   };
 
@@ -102,7 +100,7 @@ const DasboardMasyarakat = () => {
         </div>
     </div>
 
-    <div className='flex flex-col relative'>
+ 
 
 
     
@@ -157,7 +155,7 @@ const DasboardMasyarakat = () => {
         {Array.isArray(filteredLelang) && filteredLelang.length === 0 ? (
           <p className="text-center">Tidak ada data lelang tersedia.</p>
         ) : (
-          <div className=' scrollable-content h-[100vh] pb-[200px] mt-2'>
+          <div className=' scrollable-content h-[100vh] pb-[500px] mt-2'>
           
            
           <div className="bg-[#6E82B9] text-white p-4 mx-2 flex justify-between items-center mb-2 rounded-lg shadow-md ">
@@ -169,6 +167,7 @@ const DasboardMasyarakat = () => {
           </div>
           <button className="bg-[#EBF2FC] text-[#4365D1] font-semibold p-2 rounded-lg shadow-md">Hubungi</button>
         </div>
+
         
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
             {filteredLelang.map((lelang) => (
@@ -198,8 +197,7 @@ const DasboardMasyarakat = () => {
         )}
         
       </section>
-         
-      </div>
+   
     </>
   );
 };

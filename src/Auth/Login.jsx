@@ -33,7 +33,7 @@ const Login = () => {
 
   return (
     <>
-      <section className="flex justify-center items-center min-h-screen bg-gray-100">
+      <section className="flex justify-center items-center min-h-screen bg-gray-100 m-2">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-center text-blue-main">Login</h2>
           <p className="text-center text-gray-600 mb-6">Selamat Datang di Pelelangan Kami!</p>

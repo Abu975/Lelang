@@ -1,6 +1,25 @@
-const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus, isEdit }) => {
+import Swal from 'sweetalert2';
+
+const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelangStatus, isEdit, hargaAwal }) => {
   const handleBidChange = (e) => {
     setBidPrice(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    if (parseFloat(bidPrice) < hargaAwal) {
+      Swal.fire('Penawaran Gagal', 'Penawaran harus lebih tinggi dari harga awal', 'error');
+      return;
+    }
+
+    try {
+      await submitBid();
+      setBidPrice("");
+      Swal.fire('Penawaran Berhasil', 'Penawaran Anda telah berhasil dikirim', 'success').then(() => {
+        window.location.reload(); // Refresh the browser
+      });
+    } catch (error) {
+      Swal.fire('Penawaran Gagal', 'Terjadi kesalahan saat mengirim penawaran', {error});
+    }
   };
 
   return (
@@ -31,7 +50,7 @@ const PenawaranHarga = ({ bidPrice, setBidPrice, closeBidPopup, submitBid, lelan
               Batal
             </button>
             <button
-              onClick={submitBid}
+              onClick={handleSubmit}
               className="bg-blue-main text-white px-4 py-2 rounded-lg"
             >
               {isEdit ? 'Update' : 'Submit'}

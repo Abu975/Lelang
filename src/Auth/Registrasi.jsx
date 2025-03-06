@@ -22,9 +22,6 @@ const Registrasi = () => {
   
     try {
       const response = await handleRegister(userData);
-
-      console.log('Response:', response); // Debugging
-
       if (response.status !== 201) {
         if (response.status === 409) {
           Swal.fire({

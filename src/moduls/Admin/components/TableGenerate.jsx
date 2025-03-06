@@ -60,9 +60,9 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
                     </div>
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200">{row.nama_barang}</td>
-                  <td className="py-2 px-4 border-b border-gray-200">{row.harga_awal}</td>
-                  <td className="py-2 px-4 border-b border-gray-200">{row.nominal || "N/A"}</td>
-                  <td className="py-2 px-4 border-b border-gray-200">{row.telp || "N/A"}</td>
+                  <td className="py-2 px-4 border-b border-gray-200">{row.harga_awal.toLocaleString()}</td>
+                  <td className="py-2 px-4 border-b border-gray-200">{row.nominal.toLocaleString()}</td>
+                  <td className="py-2 px-4 border-b border-gray-200">{row.telp}</td>
                   <td className="py-2 px-4 border-b border-gray-200 pr-0 m-0">
                   <button
                       className="bg-[#FF4E4E] hover:bg-[#FF6363] text-white py-1 px-2 rounded ml-2"
