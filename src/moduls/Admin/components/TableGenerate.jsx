@@ -64,41 +64,38 @@ const TableGenerate = ({ handleCetakClick, reportData, handleDeleteReport }) => 
                   <td className="py-2 px-4 border-b border-gray-200">{row.nominal.toLocaleString()}</td>
                   <td className="py-2 px-4 border-b border-gray-200">{row.telp}</td>
                   <td className="py-2 px-4 border-b border-gray-200 pr-0 m-0">
-                  <button
+                    <button
                       className="bg-[#FF4E4E] hover:bg-[#FF6363] text-white py-1 px-2 rounded ml-2"
                       onClick={() => confirmDelete(index, row.id_history)}
                     >
-                      <Trash className='w-5 h-5 text-white inline '/>
+                      <Trash className='w-5 h-5 text-white inline' />
                     </button>
-                    
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200 pr-0 ml-0">
-                  <button
+                    <button
                       className="bg-blue-main text-white py-1 px-2 rounded"
                       onClick={() => handleCetakClick(row)}
                     >
                       Cetak
                     </button>
-                    
                   </td>
                 </tr>
               )
             ))}
           </tbody>
         </table>
-        
       </div>
-      <div className="pagination mt-4 flex justify-center">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
-            <button
-              key={pageNumber}
-              className={`py-1 px-3 mx-1 ${currentPage === pageNumber ? 'bg-[#718ADE] text-white' : 'bg-gray-200'}`}
-              onClick={() => handlePageChange(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          ))}
-        </div>
+      <div className="pagination mt-1 flex justify-center">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
+          <button
+            key={pageNumber}
+            className={`py-1 px-3 mx-1 ${currentPage === pageNumber ? 'bg-[#718ADE] text-white' : 'bg-gray-200'}`}
+            onClick={() => handlePageChange(pageNumber)}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
     </section>
   );
 };

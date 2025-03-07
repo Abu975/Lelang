@@ -8,7 +8,7 @@ import DateRangeFilter from './components/DateRangeFilter'; // Import DateRangeF
 import PriceRangeFilter from './components/PriceRangeFilter'; // Import PriceRangeFilter component
 import { useLelang } from "../Admin/components/AdminContext"; // Sesuaikan dengan path yang benar
 import { useAuth } from "../../Auth/AuthContext";
-import { Banknote, Calendar } from "lucide-react";
+import { Banknote, Calendar, Plus } from "lucide-react";
 
 function PendataanBarang() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,8 +167,9 @@ function PendataanBarang() {
         <Header title="Barang" name={name} />
         <div className="grid grid-cols-12 gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm ">
         <div className="order-2 md:order-1 col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-2 flex justify-start items-start xl:col-span-2">
+          
             <button onClick={handleModalOpen} className="bg-blue-main w-full text-amber-50 py-2 px-2 rounded-lg">
-              Tambah
+            <Plus className="inline h-5 w-5"/> Tambah
             </button>
           </div>
           <div className="order-1 md:order-2 col-span-8 sm:col-span-9 md:col-span-7 lg:col-span-5 xl:col-span-4">

@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { writeFile, utils } from "xlsx";
+import { FaFileExcel } from "react-icons/fa";  // Import the Excel icon
 import Header from "./components/Header";
 import TableGenerate from "./components/TableGenerate";
 import StrukModalGenerate from "./components/StrukModalGenerate";
@@ -113,6 +115,31 @@ function GenerateLaporan() {
     setIsModalOpen(false);
   };
 
+  const exportToExcel = () => {
+    const formattedData = reportData.map((row) => ({
+      "Nama Lengkap": row.nama_lengkap,
+      "Nomor Telephone": row.telp,
+      "Nama Barang": row.nama_barang,
+      "Harga Awal": row.harga_awal,
+      "Nominal": row.nominal,
+      "Tanggal": new Date(row.tanggal).toLocaleDateString(),
+    }));
+    const worksheet = utils.json_to_sheet(formattedData);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Laporan");
+    /* Set column widths */
+    const columnWidths = [
+      { wch: 20 }, // Nama Lengkap
+      { wch: 15 }, // Nomor Telephone
+      { wch: 25 }, // Nama Barang
+      { wch: 15 }, // Harga Awal
+      { wch: 15 }, // Nominal
+      { wch: 15 }, // Tanggal
+    ];
+    worksheet['!cols'] = columnWidths;
+    writeFile(workbook, "laporan.xlsx");
+  };
+
   // Filter report data based on search query, filter column, date range, and price range
   const filteredReportData = reportData.filter((row) => {
     const matchesSearchQuery = filterColumn === "semuanya"
@@ -130,89 +157,89 @@ function GenerateLaporan() {
 
   return (
     <>
-    <section className="">
+      <section className="">
         <div className="">
-        
-        <Header title="Laporan" name={name} />
-        <div className="grid gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm ">
-        <div className="grid grid-cols-12 gap-2 w-full pt-2">
-          <div className="order-1 md:order-2 col-span-12 sm:col-span-7 md:col-span-6 lg:col-span-5 xl:col-span-5">
-            <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
-          </div>
-          
-          <div className="order-3 col-span-12 sm:col-span-3 md:col-span-2 lg:col-span-2">
-          <select
-            onChange={(e) => setFilterColumn(e.target.value)}
-            className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
-            value={filterColumn}
-          >
-            <option className="bg-white text-gray-600" value="semuanya">Semuanya</option>
-            <option  className="bg-white text-gray-600" value="nama_lengkap">Username</option>
-          
-            <option className="bg-white text-gray-600" value="nama_barang">Nama Barang</option>
-            <option className="bg-white text-gray-600" value="harga_awal">Harga Awal</option>
-            <option className="bg-white text-gray-600" value="nominal">Nominal</option>
-            <option className="bg-white text-gray-600" value="telp">Telepon</option>
-          </select>
-          </div>
-             
-          <div className="order-4 col-span-12 sm:col-span-6 md:col-span-4 2xl:col-span-3 flex justify-start items-start gap-2">
-          <button
-            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
-            onClick={() => setShowDateRangePopup(true)}
-          >
-            <Calendar className="w-5 h-5 mr-2" /> Tanggal
-          </button>
-          <button
-            className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
-            onClick={() => setShowPriceRangePopup(true)}
-          >
-            <Banknote className="w-5 h-5 mr-2" /> Harga
-          </button>
-          </div>
+          <Header title="Laporan" name={name} />
+          <div className="grid gap-2 w-full bg-white p-5 my-2 shadow-sm rounded-sm">
+            <div className="grid grid-cols-12 gap-2 w-full pt-2">
+              <div className="order-1 md:order-2 col-span-12 sm:col-span-7 md:col-span-6 lg:col-span-5 xl:col-span-5">
+                <SearchBar onSearch={setSearchQuery} /> {/* Implement SearchBar */}
+              </div>
+
+              <div className="order-3 flex gap-2 col-span-12 sm:col-span-5 md:col-span-5 lg:col-span-3">
+                <select
+                  onChange={(e) => setFilterColumn(e.target.value)}
+                  className="w-full p-2 border-none text-[#4365D1] bg-[#EBF2FC]"
+                  value={filterColumn}
+                >
+                  <option className="bg-white text-gray-600" value="semuanya">Semuanya</option>
+                  <option className="bg-white text-gray-600" value="nama_lengkap">Username</option>
+                  <option className="bg-white text-gray-600" value="nama_barang">Nama Barang</option>
+                  <option className="bg-white text-gray-600" value="harga_awal">Harga Awal</option>
+                  <option className="bg-white text-gray-600" value="nominal">Nominal</option>
+                  <option className="bg-white text-gray-600" value="telp">Telepon</option>
+                </select>
+                <span>
+                <button
+                  className="text-white p-2 bg-green-500 shadow-2xl rounded-lg flex items-center justify-center"
+                  onClick={exportToExcel}
+                >
+                  <FaFileExcel className="mr-2" /> Excel
+                </button>
+                </span>
+                
+              </div>
+
+              <div className="order-4 col-span-12 sm:col-span-6 md:col-span-4 2xl:col-span-3 flex justify-start items-start gap-2">
+                <button
+                  className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
+                  onClick={() => setShowDateRangePopup(true)}
+                >
+                  <Calendar className="w-5 h-5 mr-2" /> Tanggal
+                </button>
+                <button
+                  className="col-span-6 sm:col-span-2 text-white p-2 bg-[#4365D1] shadow-2xl rounded-lg flex items-center justify-center"
+                  onClick={() => setShowPriceRangePopup(true)}
+                >
+                  <Banknote className="w-5 h-5 mr-2" /> Harga
+                </button>
+              </div>
+
+
+            </div>
           </div>
         </div>
-</div>
-      
-      
 
-      
-      {showDateRangePopup && (
-        <DateRangeFilter
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          closePopup={() => setShowDateRangePopup(false)}
-        />
-      )}
+        {showDateRangePopup && (
+          <DateRangeFilter
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            closePopup={() => setShowDateRangePopup(false)}
+          />
+        )}
 
-      {showPriceRangePopup && (
-        <PriceRangeFilter
-          priceRange={priceRange}
-          setPriceRange={setPriceRange}
-          priceFilterType={priceFilterType}
-          setPriceFilterType={setPriceFilterType}
-          closePopup={() => setShowPriceRangePopup(false)}
-        />
-      )}
+        {showPriceRangePopup && (
+          <PriceRangeFilter
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            priceFilterType={priceFilterType}
+            setPriceFilterType={setPriceFilterType}
+            closePopup={() => setShowPriceRangePopup(false)}
+          />
+        )}
 
-<div className="scrollable-content pt-2">
-  
-  <div className="">
-    
-  <TableGenerate
-        handleCetakClick={handleCetakClick}
-        reportData={filteredReportData}
-        handleDeleteReport={handleDeleteReport}
-      />
-  </div>
-
-</div>
-      
-
-     
-      </section> 
+        <div className="scrollable-content pt-0 pb-100">
+          <div className="">
+            <TableGenerate
+              handleCetakClick={handleCetakClick}
+              reportData={filteredReportData}
+              handleDeleteReport={handleDeleteReport}
+            />
+          </div>
+        </div>
+      </section>
 
       <StrukModalGenerate
         isModalOpen={isModalOpen}
